@@ -44,6 +44,21 @@ Route::get('/ipaddress', function (Request $request) {
         return view('ipaddress', $data);
 })->middleware(SessionMiddleware::class);
 
+Route::get('/ipdns', function (Request $request) {
+        $data = array('ip' => $request->session()->get('ip'));
+        return view('ipdns', $data);
+})->middleware(SessionMiddleware::class);
+
+Route::get('/ipfirewall', function (Request $request) {
+        $data = array('ip' => $request->session()->get('ip'));
+        return view('ipfirewall', $data);
+})->middleware(SessionMiddleware::class);
+
+Route::get('/iproutes', function (Request $request) {
+        $data = array('ip' => $request->session()->get('ip'));
+        return view('iproutes', $data);
+})->middleware(SessionMiddleware::class);
+
 Route::post('/api/login-mikrotik', function (Request $request) {
         $ip = $request->input('ip');
         $username = $request->input('username');
@@ -96,6 +111,75 @@ Route::post('/api/get-ipaddress', function (Request $request) {
 
         if ($API->connect($ip, $username, $password, $port)) {
                 $API->write('/ip/address/print');
+
+                $READ = $API->read(false);
+                $ARRAY = $API->parseResponse($READ);
+
+                echo json_encode($ARRAY);
+
+                $API->disconnect();
+        }
+})->middleware(SessionMiddleware::class);
+
+
+Route::post('/api/get-ipdns', function (Request $request) {
+        $API = new RouterOS();
+
+        $API->debug = false;
+
+        $ip = $request->input('ip');
+        $username = $request->input('username');
+        $password = $request->input('password');
+        $port = $request->input('port');
+
+        if ($API->connect($ip, $username, $password, $port)) {
+                $API->write('/ip/dns/print');
+
+                $READ = $API->read(false);
+                $ARRAY = $API->parseResponse($READ);
+
+                echo json_encode($ARRAY);
+
+                $API->disconnect();
+        }
+})->middleware(SessionMiddleware::class);
+
+
+Route::post('/api/get-iproutes', function (Request $request) {
+        $API = new RouterOS();
+
+        $API->debug = false;
+
+        $ip = $request->input('ip');
+        $username = $request->input('username');
+        $password = $request->input('password');
+        $port = $request->input('port');
+
+        if ($API->connect($ip, $username, $password, $port)) {
+                $API->write('/ip/route/print');
+
+                $READ = $API->read(false);
+                $ARRAY = $API->parseResponse($READ);
+
+                echo json_encode($ARRAY);
+
+                $API->disconnect();
+        }
+})->middleware(SessionMiddleware::class);
+
+
+Route::post('/api/get-ipfirewall', function (Request $request) {
+        $API = new RouterOS();
+
+        $API->debug = false;
+
+        $ip = $request->input('ip');
+        $username = $request->input('username');
+        $password = $request->input('password');
+        $port = $request->input('port');
+
+        if ($API->connect($ip, $username, $password, $port)) {
+                $API->write('/ip/firewall/nat/print');
 
                 $READ = $API->read(false);
                 $ARRAY = $API->parseResponse($READ);
