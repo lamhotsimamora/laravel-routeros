@@ -13,38 +13,7 @@
 </head>
 <body >
     <div class="container" id="app">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-          <a class="navbar-brand" href=".">Router OS</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" @click="getInterface" href="#interface">Interface</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  IP
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" @click="getIpAddress" href="#ipaddress">Address</a></li>
-                  <li><a class="dropdown-item" @click="getIpDns" href="#ipdns">DNS</a></li>
-                  <li><a class="dropdown-item" @click="getIpFirewall" href="#ipfirewall">Firewall</a></li>
-                  <li><a class="dropdown-item" @click="getIpHotspot" href="#iphotspot">Hotspot</a></li>
-                  <li><a class="dropdown-item" @click="getIpPool" href="#ippool">Pool</a></li>
-                  <li><a class="dropdown-item" @click="getIpRoutes" href="#iproutes">Routes</a></li>
-                </ul>
-              </li>
-            </ul>
-            <form class="d-flex" role="search">
-             
-              <button class="btn btn-outline-danger" @click="logout" type="button">Logout</button>
-            </form>
-          </div>
-        </div>
-      </nav>
+      @include('@component.navbar')
       <br>
       <div class="card">
         <div class="card-body">
@@ -78,9 +47,14 @@
                @{{ menu }}
             </div>
             <br>
-            <ul class="list-group">
-                <li v-for="mydata in data" class="list-group-item list-group-item-dark">@{{mydata.interface}} - @{{mydata.address}} <i style="color: red">( @{{mydata['network']}} )</i> </li>
-            </ul>
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1">Chain</span>
+              <input type="text" class="form-control" placeholder="Chain" v-model="chain" aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1">Action</span>
+              <input type="text" class="form-control" placeholder="Action" v-model="action" aria-label="Username" aria-describedby="basic-addon1">
+            </div>
         </div>
       </div>
 
@@ -100,7 +74,9 @@
           data: {
              data : null,
              loading : false,
-             menu : null
+             menu : null,
+             chain : null,
+             action:null
           },
           methods: {
             getIpHotspot: function(){
@@ -130,7 +106,7 @@
           },
           mounted() {
             this.loading = true;
-                this.menu  = 'IP Firewall'
+                this.menu  = 'IP Firewall NAT'
                 __({
                     url : ipfirewall,
                     method : 'post',
@@ -145,7 +121,8 @@
                      this.loading = false
                      var obj  = JSON.parse($response);
                      
-                     this.data  = obj;
+                     this.chain  = obj[0].chain;
+                     this.action  = obj[0].action;
                  });
           },
         });

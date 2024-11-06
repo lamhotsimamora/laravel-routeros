@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>IP DNS</title>
+    <title>IP Pool</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -13,7 +13,38 @@
 </head>
 <body >
     <div class="container" id="app">
-      @include('@component.navbar')
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href=".">Router OS</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" @click="getInterface" href="#interface">Interface</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  IP
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" @click="getIpAddress" href="#ipaddress">Address</a></li>
+                  <li><a class="dropdown-item" @click="getIpDns" href="#ipdns">DNS</a></li>
+                  <li><a class="dropdown-item" @click="getIpFirewall" href="#ipfirewall">Firewall</a></li>
+                  <li><a class="dropdown-item" @click="getIpHotspot" href="#iphotspot">Hotspot</a></li>
+                  <li><a class="dropdown-item" @click="getIpPool" href="#ippool">Pool</a></li>
+                  <li><a class="dropdown-item" @click="getIpRoutes" href="#iproutes">Routes</a></li>
+                </ul>
+              </li>
+            </ul>
+            <form class="d-flex" role="search">
+             
+              <button class="btn btn-outline-danger" @click="logout" type="button">Logout</button>
+            </form>
+          </div>
+        </div>
+      </nav>
       <br>
       <div class="card">
         <div class="card-body">
@@ -47,18 +78,9 @@
                @{{ menu }}
             </div>
             <br>
-            <div class="input-group mb-3">
-                <span class="input-group-text" id="basic-addon1">Servers</span>
-                <input type="text" class="form-control" placeholder="Servers" v-model="servers" aria-label="Username" aria-describedby="basic-addon1">
-              </div>
-              <div class="input-group mb-3">
-                <span class="input-group-text" id="basic-addon1">Dynamic Servers</span>
-                <input type="text" class="form-control" placeholder="Dynamic Servers" v-model="dynamic" aria-label="Username" aria-describedby="basic-addon1">
-              </div>
-              <div class="input-group mb-3">
-                <span class="input-group-text" id="basic-addon1">Allow Remote Request</span>
-                <input type="text" class="form-control" placeholder="Allow Remote Request" v-model="allowremote" aria-label="Username" aria-describedby="basic-addon1">
-              </div>
+            <ul class="list-group">
+                <li v-for="mydata in data" class="list-group-item list-group-item-dark">@{{mydata.name}} - @{{mydata.ranges}} </li>
+            </ul>
         </div>
       </div>
 
@@ -67,21 +89,18 @@
         const csrf_token = "<?= csrf_token(); ?>";
         const SERVER = 'http://127.0.0.1:8000/';
 
-        const ipdns = SERVER + 'api/get-ipdns';
+        const ippool = SERVER + 'api/get-ippool';
 
         const ip = "<?= $ip ?>";
 
-        _setTitle("IP DNS { "+ip+" }");
+        _setTitle("IP Pool { "+ip+" }");
       
         new Vue({
           el: '#app',
           data: {
              data : null,
              loading : false,
-             menu : null,
-             servers:null,
-             dynamic: null,
-             allowremote:null
+             menu : null
           },
           methods: {
             getIpHotspot: function(){
@@ -111,9 +130,9 @@
           },
           mounted() {
             this.loading = true;
-                this.menu  = 'IP DNS'
+                this.menu  = 'IP Pool'
                 __({
-                    url : ipdns,
+                    url : ippool,
                     method : 'post',
                     data : {
                         ip : _getStorage('ip'),
@@ -126,9 +145,7 @@
                      this.loading = false
                      var obj  = JSON.parse($response);
                      
-                     this.servers  = obj[0].servers;
-                     this.dynamic  = obj[0]['dynamic-servers'];
-                     this.allowremote  = obj[0]['allow-remote-requests'];
+                     this.data  = obj;
                  });
           },
         });

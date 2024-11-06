@@ -79,7 +79,7 @@
             </div>
             <br>
             <ul class="list-group">
-                <li v-for="mydata in data" class="list-group-item list-group-item-dark">@{{mydata.interface}} - @{{mydata.address}} <i style="color: red">( @{{mydata['network']}} )</i> </li>
+                <li v-for="mydata in data" class="list-group-item list-group-item-dark">@{{mydata['dst-address']}} - @{{mydata['gateway-status']}}</li>
             </ul>
         </div>
       </div>

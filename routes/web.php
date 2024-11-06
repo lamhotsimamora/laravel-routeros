@@ -59,6 +59,16 @@ Route::get('/iproutes', function (Request $request) {
         return view('iproutes', $data);
 })->middleware(SessionMiddleware::class);
 
+Route::get('/ippool', function (Request $request) {
+        $data = array('ip' => $request->session()->get('ip'));
+        return view('ippool', $data);
+})->middleware(SessionMiddleware::class);
+
+Route::get('/iphotspot', function (Request $request) {
+        $data = array('ip' => $request->session()->get('ip'));
+        return view('iphotspot', $data);
+})->middleware(SessionMiddleware::class);
+
 Route::post('/api/login-mikrotik', function (Request $request) {
         $ip = $request->input('ip');
         $username = $request->input('username');
@@ -180,6 +190,50 @@ Route::post('/api/get-ipfirewall', function (Request $request) {
 
         if ($API->connect($ip, $username, $password, $port)) {
                 $API->write('/ip/firewall/nat/print');
+
+                $READ = $API->read(false);
+                $ARRAY = $API->parseResponse($READ);
+
+                echo json_encode($ARRAY);
+
+                $API->disconnect();
+        }
+})->middleware(SessionMiddleware::class);
+
+Route::post('/api/get-ippool', function (Request $request) {
+        $API = new RouterOS();
+
+        $API->debug = false;
+
+        $ip = $request->input('ip');
+        $username = $request->input('username');
+        $password = $request->input('password');
+        $port = $request->input('port');
+
+        if ($API->connect($ip, $username, $password, $port)) {
+                $API->write('/ip/pool/print');
+
+                $READ = $API->read(false);
+                $ARRAY = $API->parseResponse($READ);
+
+                echo json_encode($ARRAY);
+
+                $API->disconnect();
+        }
+})->middleware(SessionMiddleware::class);
+
+Route::post('/api/get-iphotspot', function (Request $request) {
+        $API = new RouterOS();
+
+        $API->debug = false;
+
+        $ip = $request->input('ip');
+        $username = $request->input('username');
+        $password = $request->input('password');
+        $port = $request->input('port');
+
+        if ($API->connect($ip, $username, $password, $port)) {
+                $API->write('/ip/hotspot/user/print');
 
                 $READ = $API->read(false);
                 $ARRAY = $API->parseResponse($READ);
