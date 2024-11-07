@@ -56,7 +56,7 @@
     </div>
       <script>
         const csrf_token = "<?= csrf_token(); ?>";
-        const SERVER = 'http://127.0.0.1:8000/';
+        const SERVER = 'http://103.126.226.164:1234/';
 
         const interface = SERVER + 'api/get-interface';
         const ipaddress = SERVER + 'api/get-ipaddress';
