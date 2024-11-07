@@ -92,6 +92,8 @@
             },
             getInterface: function(){
                 _refresh("/interface");
+            },getNetwatch: function(){
+                _refresh("/netwatch");
             },
             logout:function(){
                 _refresh("/logout");

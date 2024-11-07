@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>IP Firewall NAT</title>
+    <title>Netwatch</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -47,14 +47,9 @@
                @{{ menu }}
             </div>
             <br>
-            <div class="input-group mb-3">
-              <span class="input-group-text" id="basic-addon1">Chain</span>
-              <input type="text" class="form-control" placeholder="Chain" v-model="chain" aria-label="Username" aria-describedby="basic-addon1">
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text" id="basic-addon1">Action</span>
-              <input type="text" class="form-control" placeholder="Action" v-model="action" aria-label="Username" aria-describedby="basic-addon1">
-            </div>
+            <ul class="list-group">
+                <li v-for="mydata in data" class="list-group-item list-group-item-dark">@{{mydata.host}} - @{{mydata.status}} </li>
+            </ul>
         </div>
       </div>
 
@@ -63,20 +58,18 @@
         const csrf_token = "<?= csrf_token(); ?>";
         const SERVER = 'http://127.0.0.1:8000/';
 
-        const ipfirewall = SERVER + 'api/get-ipfirewall';
+        const netwatch = SERVER + 'api/get-netwatch';
 
         const ip = "<?= $ip ?>";
 
-        _setTitle("IP Firewall NAT { "+ip+" }");
+        _setTitle("Netwatch { "+ip+" }");
       
         new Vue({
           el: '#app',
           data: {
              data : null,
              loading : false,
-             menu : null,
-             chain : null,
-             action:null
+             menu : null
           },
           methods: {
             getIpHotspot: function(){
@@ -108,9 +101,9 @@
           },
           mounted() {
             this.loading = true;
-                this.menu  = 'IP Firewall NAT'
+                this.menu  = 'Netwatch'
                 __({
-                    url : ipfirewall,
+                    url : netwatch,
                     method : 'post',
                     data : {
                         ip : _getStorage('ip'),
@@ -123,8 +116,7 @@
                      this.loading = false
                      var obj  = JSON.parse($response);
                      
-                     this.chain  = obj[0].chain;
-                     this.action  = obj[0].action;
+                     this.data  = obj;
                  });
           },
         });

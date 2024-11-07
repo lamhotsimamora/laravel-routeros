@@ -22,7 +22,16 @@
               <li><a class="dropdown-item" @click="getIpRoutes" href="#iproutes">Routes</a></li>
             </ul>
           </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Tools
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" @click="getNetwatch" href="#ipaddress">Netwatch</a></li>
+            </ul>
+          </li>
         </ul>
+        
         <form class="d-flex" role="search">
          
           <button class="btn btn-outline-danger" @click="logout" type="button">Logout</button>

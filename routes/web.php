@@ -69,6 +69,11 @@ Route::get('/iphotspot', function (Request $request) {
         return view('iphotspot', $data);
 })->middleware(SessionMiddleware::class);
 
+Route::get('/netwatch', function (Request $request) {
+        $data = array('ip' => $request->session()->get('ip'));
+        return view('netwatch', $data);
+})->middleware(SessionMiddleware::class);
+
 Route::post('/api/login-mikrotik', function (Request $request) {
         $ip = $request->input('ip');
         $username = $request->input('username');
@@ -234,6 +239,28 @@ Route::post('/api/get-iphotspot', function (Request $request) {
 
         if ($API->connect($ip, $username, $password, $port)) {
                 $API->write('/ip/hotspot/user/print');
+
+                $READ = $API->read(false);
+                $ARRAY = $API->parseResponse($READ);
+
+                echo json_encode($ARRAY);
+
+                $API->disconnect();
+        }
+})->middleware(SessionMiddleware::class);
+
+Route::post('/api/get-netwatch', function (Request $request) {
+        $API = new RouterOS();
+
+        $API->debug = false;
+
+        $ip = $request->input('ip');
+        $username = $request->input('username');
+        $password = $request->input('password');
+        $port = $request->input('port');
+
+        if ($API->connect($ip, $username, $password, $port)) {
+                $API->write('/tool/netwatch/print');
 
                 $READ = $API->read(false);
                 $ARRAY = $API->parseResponse($READ);
