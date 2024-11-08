@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>IP Routes</title>
+    <title>Beep</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -48,7 +48,7 @@
             </div>
             <br>
             <ul class="list-group">
-                <li v-for="mydata in data" class="list-group-item list-group-item-dark">@{{mydata['dst-address']}} - @{{mydata['gateway-status']}}</li>
+                <li v-for="mydata in data" class="list-group-item list-group-item-dark">@{{mydata.host}} - @{{mydata.status}} </li>
             </ul>
         </div>
       </div>
@@ -58,11 +58,11 @@
         const csrf_token = "<?= csrf_token(); ?>";
         const SERVER = 'http://103.126.226.164:1234/';
 
-        const iproutes = SERVER + 'api/get-iproutes';
+        const beep = SERVER + 'api/get-beep';
 
         const ip = "<?= $ip ?>";
 
-        _setTitle("IP Routes { "+ip+" }");
+        _setTitle("Beep { "+ip+" }");
       
         new Vue({
           el: '#app',
@@ -104,9 +104,9 @@
           },
           mounted() {
             this.loading = true;
-                this.menu  = 'IP Routes'
+                this.menu  = 'Beep'
                 __({
-                    url : iproutes,
+                    url : beep,
                     method : 'post',
                     data : {
                         ip : _getStorage('ip'),

@@ -77,6 +77,9 @@
             getNetwatch: function(){
                 _refresh("/netwatch");
             },
+            getBeep: function(){
+                _refresh("/beep");
+            },
             logout:function(){
                 _refresh("/logout");
             }

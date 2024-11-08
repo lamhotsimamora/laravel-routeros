@@ -30,6 +30,9 @@
               <li><a class="dropdown-item" @click="getNetwatch" href="#ipaddress">Netwatch</a></li>
             </ul>
           </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" @click="getBeep" href="#beep">Beep</a>
+          </li>
         </ul>
         
         <form class="d-flex" role="search">
