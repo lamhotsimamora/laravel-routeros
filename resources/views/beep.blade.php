@@ -10,6 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/lamhotsimamora/garuda-javascript@master/src/garuda.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body >
     <div class="container" id="app">
@@ -47,9 +48,7 @@
                @{{ menu }}
             </div>
             <br>
-            <ul class="list-group">
-                <li v-for="mydata in data" class="list-group-item list-group-item-dark">@{{mydata.host}} - @{{mydata.status}} </li>
-            </ul>
+            
         </div>
       </div>
 
@@ -117,9 +116,11 @@
                     }
                  }).request($response=>{
                      this.loading = false
-                     var obj  = JSON.parse($response);
-                     
-                     this.data  = obj;
+                    Swal.fire({
+                        title: "Beep !",
+                        text: "Beep !",
+                        icon: "success"
+                    });
                  });
           },
         });
